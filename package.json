@@ -18,6 +18,8 @@
     "@mui/material": "^6.1.2",
     "@mui/x-date-pickers": "^7.19.0",
     "chart.js": "^4.4.4",
+    "dayjs": "^1.11.13",
+    "ethereum-block-by-date": "^1.5.0",
     "ethers": "^5.7.2",
     "react": "^18.3.1",
     "react-chartjs-2": "^5.2.0",
