@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button, Typography } from "@mui/material";
+import { Button, Typography, Box, Alert } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { FormControl, MenuItem, Select } from "@mui/material";
@@ -9,7 +9,7 @@ import { ethers } from "ethers";
 
 const provider = new ethers.providers.Web3Provider(window.ethereum);
 
-function HistoricalDataPicker({
+function GetHistoricalData({
   tokens,
   setDateAndToken,
   setHistoricalData,
@@ -127,6 +127,7 @@ function HistoricalDataPicker({
 
       setHistoricalData(balances);
     } catch (error) {
+      console.error(error);
       setError("Failed to fetch historical data. Please try again.");
     }
   };
@@ -139,18 +140,37 @@ function HistoricalDataPicker({
         startDate: startDate.format("DD/MM/YYYY"),
         endDate: endDate.format("DD/MM/YYYY"),
       });
+      setHistoricalData([0]);
       fetchHistoricalData();
     }
   };
 
   return (
-    <div>
-      <Typography variant="h6" gutterBottom>
+    <Box
+      mt={4}
+      display="flex"
+      flexDirection="column"
+      alignItems="center"
+      p={3}
+      sx={{
+        borderRadius: 2,
+        boxShadow: 3,
+        backgroundColor: "#f5f5f5",
+        width: "100%",
+        maxWidth: 600,
+      }}
+    >
+      <Typography variant="h5" gutterBottom align="center" fontWeight="bold">
         Historical Data
       </Typography>
 
       <FormControl fullWidth sx={{ marginBottom: 3 }}>
-        <Select value={token.symbol} onChange={handleChange} displayEmpty>
+        <Select
+          value={token.symbol}
+          onChange={handleChange}
+          displayEmpty
+          sx={{ bgcolor: "white" }} // Background color for better visibility
+        >
           <MenuItem value="" disabled>
             Select a token
           </MenuItem>
@@ -162,36 +182,45 @@ function HistoricalDataPicker({
         </Select>
       </FormControl>
 
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <DatePicker
-          views={["day", "month", "year"]}
-          label="Start Date"
-          value={startDate}
-          onChange={(newValue) => setStartDate(newValue)}
-          format="DD/MM/YYYY"
-        />
-        <DatePicker
-          views={["day", "month", "year"]}
-          label="End Date"
-          value={endDate}
-          onChange={(newValue) => setEndDate(newValue)}
-          format="DD/MM/YYYY"
-        />
-      </LocalizationProvider>
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        mt={2}
+        mb={3}
+        width="100%"
+      >
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <DatePicker
+            label="Start Date"
+            value={startDate}
+            onChange={setStartDate}
+            sx={{ width: "48%", marginRight: 1 }} // Spacing between DatePickers
+          />
+          <DatePicker
+            label="End Date"
+            value={endDate}
+            onChange={setEndDate}
+            sx={{ width: "48%" }} // Spacing between DatePickers
+          />
+        </LocalizationProvider>
+      </Box>
 
-      <Typography color="error" sx={{ marginTop: 2 }}>
-        {error}
-      </Typography>
+      {error && (
+        <Alert severity="error" sx={{ marginBottom: 2 }}>
+          {error}
+        </Alert>
+      )}
+
       <Button
         variant="contained"
         color="primary"
-        sx={{ marginTop: 2 }}
         onClick={handleFetchData}
+        sx={{ width: "100%" }} // Full width for the button
       >
         Display Data
       </Button>
-    </div>
+    </Box>
   );
 }
 
-export default HistoricalDataPicker;
+export default GetHistoricalData;

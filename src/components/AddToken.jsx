@@ -1,10 +1,15 @@
-import { Button, Typography, TextField } from "@mui/material";
+import { Button, Typography, TextField, Box, Alert } from "@mui/material";
 import { useState } from "react";
 import { ethers } from "ethers";
 import PropTypes from "prop-types";
 
 function AddToken({ setTokens }) {
-  const [token, setToken] = useState({ name: "", address: "", symbol: "" });
+  const [token, setToken] = useState({
+    name: "",
+    address: "",
+    symbol: "",
+    balance: 0,
+  });
   const [error, setError] = useState(""); // State for error messages
 
   const getTokenDetails = async (address) => {
@@ -42,32 +47,71 @@ function AddToken({ setTokens }) {
   };
 
   return (
-    <div>
-      <Typography variant="h6" gutterBottom>
+    <Box
+      sx={{
+        marginTop: 3,
+        padding: 3,
+        textAlign: "center",
+        borderRadius: 2,
+        boxShadow: 3,
+        backgroundColor: "#f5f5f5", // Light background for better contrast
+      }}
+    >
+      <Typography
+        variant="h5"
+        gutterBottom
+        sx={{
+          fontWeight: "bold",
+          color: "#3f51b5",
+          marginBottom: 2,
+          textTransform: "uppercase",
+          letterSpacing: 1,
+        }}
+      >
         Add Token
       </Typography>
-      <TextField
-        label="Enter Token Address"
-        variant="outlined"
-        value={token.address}
-        onChange={(e) => setToken({ ...token, address: e.target.value })}
-        style={{ marginRight: "10px" }}
-      />
-      <Button variant="outlined" onClick={handleAdd}>
-        Add Token
-      </Button>
+
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        sx={{ gap: 2 }}
+      >
+        <TextField
+          label="Enter Token Address"
+          variant="outlined"
+          value={token.address}
+          onChange={(e) => setToken({ ...token, address: e.target.value })}
+          sx={{
+            width: "300px",
+            "& .MuiOutlinedInput-root": {
+              borderRadius: 2, // Rounded corners
+            },
+          }}
+        />
+        <Button
+          variant="contained"
+          onClick={handleAdd}
+          sx={{
+            paddingX: 4,
+            paddingY: 1,
+            backgroundColor: "#3f51b5",
+            "&:hover": {
+              backgroundColor: "#303f9f", // Darker shade on hover
+            },
+          }}
+        >
+          Add Token
+        </Button>
+      </Box>
+
       {error && (
-        <Typography color="error" sx={{ marginTop: 2 }}>
+        <Alert severity="error" sx={{ marginTop: 2 }}>
           {error}
-        </Typography>
+        </Alert>
       )}
-    </div>
+    </Box>
   );
 }
-
-// Define prop types
-AddToken.propTypes = {
-  setTokens: PropTypes.func.isRequired,
-};
 
 export default AddToken;

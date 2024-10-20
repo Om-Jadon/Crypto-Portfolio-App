@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { ethers } from "ethers"; // Ensure ethers is correctly imported
-import { Button, Typography, TextField } from "@mui/material";
+import { Button, Typography, TextField, Alert, Box } from "@mui/material";
 
 const WalletConnect = ({ setWalletAddress }) => {
   const [error, setError] = useState("");
@@ -36,28 +36,64 @@ const WalletConnect = ({ setWalletAddress }) => {
   };
 
   return (
-    <div>
+    <Box
+      display="flex"
+      flexDirection="column"
+      alignItems="center"
+      justifyContent="center"
+      mt={5}
+      sx={{
+        maxWidth: 400,
+        margin: "0 auto",
+        padding: 3,
+        borderRadius: 2,
+        boxShadow: 3,
+        backgroundColor: "#f9f9f9", // Light background for contrast
+      }}
+    >
       <Button
         variant="contained"
         onClick={connectWallet}
-        style={{ margin: "10px" }}
+        sx={{ width: "100%", mb: 2, paddingY: 1.5, fontWeight: "bold" }}
       >
         Connect Wallet
       </Button>
-      <div>
-        <TextField
-          label="Or Enter Wallet Address"
-          variant="outlined"
-          value={manualAddress}
-          onChange={(e) => setManualAddress(e.target.value)}
-          style={{ marginRight: "10px" }}
-        />
-        <Button variant="contained" onClick={handleManualAddress}>
-          Set Address
-        </Button>
-      </div>
-      {error && <Typography color="error">{error}</Typography>}
-    </div>
+
+      <TextField
+        label="Or Enter Wallet Address"
+        variant="outlined"
+        value={manualAddress}
+        onChange={(e) => setManualAddress(e.target.value)}
+        fullWidth
+        sx={{
+          mb: 2,
+          "& .MuiOutlinedInput-root": {
+            borderRadius: 2, // Rounded corners for the text field
+          },
+        }}
+      />
+
+      <Button
+        variant="contained"
+        onClick={handleManualAddress}
+        sx={{
+          width: "100%",
+          paddingY: 1.5,
+          fontWeight: "bold",
+        }}
+      >
+        Set Address
+      </Button>
+
+      {error && (
+        <Alert
+          severity="error"
+          sx={{ mt: 2, width: "100%", textAlign: "center" }}
+        >
+          {error}
+        </Alert>
+      )}
+    </Box>
   );
 };
 

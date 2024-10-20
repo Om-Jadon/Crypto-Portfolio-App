@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Typography } from "@mui/material";
+import { Typography, Box } from "@mui/material";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -10,18 +10,20 @@ import Paper from "@mui/material/Paper";
 import CircularProgress from "@mui/material/CircularProgress";
 import { ethers } from "ethers"; // Import ethers to interact with contracts
 
-const WatchList = ({ tokens, walletAddress }) => {
-  const [balances, setBalances] = useState({});
-
+const WatchList = ({ tokens, walletAddress, setTokens }) => {
+  const fetchBalances = async () => {
+    for (const token of tokens) {
+      const balance = await fetchCurrentBalance(token.address);
+      setTokens((prevTokens) =>
+        prevTokens.map((prevToken) =>
+          prevToken.address === token.address
+            ? { ...prevToken, balance: balance }
+            : prevToken
+        )
+      );
+    }
+  };
   useEffect(() => {
-    const fetchBalances = async () => {
-      const newBalances = {};
-      for (const token of tokens) {
-        newBalances[token.address] = await fetchCurrentBalance(token.address);
-      }
-      setBalances(newBalances);
-    };
-
     if (tokens.length > 0) {
       fetchBalances();
     }
@@ -41,29 +43,53 @@ const WatchList = ({ tokens, walletAddress }) => {
   };
 
   return (
-    <div>
-      <Typography variant="h6" gutterBottom>
+    <Box sx={{ padding: 2, marginTop: 3 }}>
+      <Typography
+        variant="h5"
+        gutterBottom
+        sx={{
+          fontWeight: "bold",
+          color: "#3f51b5",
+          marginBottom: 2,
+          textTransform: "uppercase",
+          letterSpacing: 1,
+        }}
+      >
         Watch List
       </Typography>
-      <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+
+      <Box display="flex" justifyContent="flex-end" mb={2}></Box>
+
+      <TableContainer component={Paper} sx={{ boxShadow: 3 }}>
+        <Table sx={{ minWidth: 650 }} aria-label="watchlist table">
           <TableHead>
-            <TableRow>
-              <TableCell>Token Symbol</TableCell>
-              <TableCell>Token Name</TableCell>
-              <TableCell>Address</TableCell>
-              <TableCell align="right">Current Balance</TableCell>
+            <TableRow sx={{ backgroundColor: "#f5f5f5" }}>
+              <TableCell>
+                <strong>Token Symbol</strong>
+              </TableCell>
+              <TableCell>
+                <strong>Token Name</strong>
+              </TableCell>
+              <TableCell>
+                <strong>Address</strong>
+              </TableCell>
+              <TableCell align="right">
+                <strong>Current Balance</strong>
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {tokens.map((token, index) => (
-              <TableRow key={index}>
+              <TableRow
+                key={index}
+                sx={{ "&:nth-of-type(odd)": { backgroundColor: "#fafafa" } }}
+              >
                 <TableCell>{token.symbol}</TableCell>
                 <TableCell>{token.name}</TableCell>
                 <TableCell>{token.address}</TableCell>
                 <TableCell align="right">
-                  {balances[token.address] !== undefined ? (
-                    balances[token.address]
+                  {token.balance !== undefined ? (
+                    token.balance
                   ) : (
                     <CircularProgress size={20} />
                   )}
@@ -73,7 +99,7 @@ const WatchList = ({ tokens, walletAddress }) => {
           </TableBody>
         </Table>
       </TableContainer>
-    </div>
+    </Box>
   );
 };
 
