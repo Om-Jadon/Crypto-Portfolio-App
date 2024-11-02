@@ -1,7 +1,6 @@
 import { Button, Typography, TextField, Box, Alert } from "@mui/material";
 import { useState } from "react";
 import { ethers } from "ethers";
-import PropTypes from "prop-types";
 
 function AddToken({ setTokens }) {
   const [token, setToken] = useState({
@@ -10,7 +9,7 @@ function AddToken({ setTokens }) {
     symbol: "",
     balance: 0,
   });
-  const [error, setError] = useState(""); // State for error messages
+  const [error, setError] = useState("");
 
   const getTokenDetails = async (address) => {
     const ERC20_ABI = [
@@ -20,27 +19,27 @@ function AddToken({ setTokens }) {
     try {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const contract = new ethers.Contract(address, ERC20_ABI, provider);
-      const name = await contract.name(); // Fetch token name
-      const symbol = await contract.symbol(); // Fetch token symbol
+      const name = await contract.name();
+      const symbol = await contract.symbol();
       return { name, symbol };
     } catch (error) {
       console.error(
         "Invalid ERC-20 address or unable to fetch token details.",
         error
       );
-      return null; // If not a valid ERC-20 contract
+      return null;
     }
   };
 
   const handleAdd = async () => {
-    setError(""); // Clear previous error messages
-    const details = await getTokenDetails(token.address); // Fetch the token details
+    setError("");
+    const details = await getTokenDetails(token.address);
     if (details) {
       setTokens((prevTokens) => [
         ...prevTokens,
         { ...token, name: details.name, symbol: details.symbol },
       ]);
-      setToken({ name: "", address: "", symbol: "" }); // Reset the token state
+      setToken({ name: "", address: "", symbol: "" });
     } else {
       setError("Invalid ERC-20 address or unable to fetch token details.");
     }
@@ -54,7 +53,7 @@ function AddToken({ setTokens }) {
         textAlign: "center",
         borderRadius: 2,
         boxShadow: 3,
-        backgroundColor: "#f5f5f5", // Light background for better contrast
+        backgroundColor: "#f5f5f5",
       }}
     >
       <Typography
@@ -85,7 +84,7 @@ function AddToken({ setTokens }) {
           sx={{
             width: "300px",
             "& .MuiOutlinedInput-root": {
-              borderRadius: 2, // Rounded corners
+              borderRadius: 2,
             },
           }}
         />
@@ -97,7 +96,7 @@ function AddToken({ setTokens }) {
             paddingY: 1,
             backgroundColor: "#3f51b5",
             "&:hover": {
-              backgroundColor: "#303f9f", // Darker shade on hover
+              backgroundColor: "#303f9f",
             },
           }}
         >

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   Typography,
   TextField,
@@ -26,7 +26,7 @@ const TokenTransfer = ({ tokens, setTokens }) => {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState("");
   const [error, setError] = useState("");
-  const [transferHistory, setTransferHistory] = useState([]); // State to track transfer history
+  const [transferHistory, setTransferHistory] = useState([]);
 
   const handleChange = (event) => {
     const selectedToken = tokens.find((t) => t.symbol === event.target.value);
@@ -73,7 +73,6 @@ const TokenTransfer = ({ tokens, setTokens }) => {
         })
       );
 
-      // Clear input fields
       setRecipientAddress("");
       setAmount("");
 

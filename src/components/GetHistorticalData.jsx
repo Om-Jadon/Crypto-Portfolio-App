@@ -45,7 +45,7 @@ function GetHistoricalData({
   };
 
   const getBlockNumberByDate = async (targetDate) => {
-    let low = 0; // Start from the genesis block
+    let low = 0;
     let high = await provider.getBlockNumber(); // Latest block number
 
     while (low <= high) {
@@ -61,7 +61,7 @@ function GetHistoricalData({
         return mid; // Found the exact block
       }
     }
-    return high; // Closest block with timestamp <= target date
+    return high;
   };
 
   const fetchHistoricalData = async () => {
@@ -77,22 +77,19 @@ function GetHistoricalData({
       const endDateObj = dayjs(endDate, "DD/MM/YYYY");
 
       const balances = [];
-      const blockPromises = []; // Store promises for getting block numbers
-      const balancePromises = []; // Store promises for getting balances
+      const blockPromises = [];
+      const balancePromises = [];
 
-      // Iterate through each day between start and end date
       for (
         let date = startDateObj;
         date.isBefore(endDateObj) || date.isSame(endDateObj);
         date = date.add(1, "day")
       ) {
-        blockPromises.push(getBlockNumberByDate(date)); // Store promises
+        blockPromises.push(getBlockNumberByDate(date));
       }
 
-      // Wait for all block number promises to resolve
       const blockNumbers = await Promise.all(blockPromises);
 
-      // Create balance fetch promises for the block numbers
       blockNumbers.forEach((blockNumber, index) => {
         if (blockNumber !== null) {
           const contract = new ethers.Contract(
@@ -110,17 +107,15 @@ function GetHistoricalData({
                 balances.push({
                   blockNumber,
                   balance: formattedBalance,
-                  date: startDateObj.add(index, "day").format("DD/MM/YYYY"), // Date corresponding to this index
+                  date: startDateObj.add(index, "day").format("DD/MM/YYYY"),
                 });
               })
           );
         }
       });
 
-      // Wait for all balance fetch promises to resolve
       await Promise.all(balancePromises);
 
-      // Sort balances by date in ascending order
       balances.sort(
         (a, b) => dayjs(a.date, "DD/MM/YYYY") - dayjs(b.date, "DD/MM/YYYY")
       );
@@ -169,7 +164,7 @@ function GetHistoricalData({
           value={token.symbol}
           onChange={handleChange}
           displayEmpty
-          sx={{ bgcolor: "white" }} // Background color for better visibility
+          sx={{ bgcolor: "white" }}
         >
           <MenuItem value="" disabled>
             Select a token
@@ -194,13 +189,13 @@ function GetHistoricalData({
             label="Start Date"
             value={startDate}
             onChange={setStartDate}
-            sx={{ width: "48%", marginRight: 1 }} // Spacing between DatePickers
+            sx={{ width: "48%", marginRight: 1 }}
           />
           <DatePicker
             label="End Date"
             value={endDate}
             onChange={setEndDate}
-            sx={{ width: "48%" }} // Spacing between DatePickers
+            sx={{ width: "48%" }}
           />
         </LocalizationProvider>
       </Box>
@@ -215,7 +210,7 @@ function GetHistoricalData({
         variant="contained"
         color="primary"
         onClick={handleFetchData}
-        sx={{ width: "100%" }} // Full width for the button
+        sx={{ width: "100%" }}
       >
         Display Data
       </Button>

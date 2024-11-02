@@ -52,7 +52,7 @@ function DisplayHistoricalData({ historicalData, symbol }) {
                     scaleType: "point",
                     data: date,
                     tickLabelStyle: {
-                      rotation: -45, // Rotate labels for better visibility
+                      rotation: -45,
                     },
                   },
                 ]}

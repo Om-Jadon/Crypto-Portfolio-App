@@ -8,7 +8,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import CircularProgress from "@mui/material/CircularProgress";
-import { ethers } from "ethers"; // Import ethers to interact with contracts
+import { ethers } from "ethers";
 
 const WatchList = ({ tokens, walletAddress, setTokens }) => {
   const fetchBalances = async () => {

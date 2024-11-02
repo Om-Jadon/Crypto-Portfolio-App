@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { ethers } from "ethers"; // Ensure ethers is correctly imported
-import { Button, Typography, TextField, Alert, Box } from "@mui/material";
+import { ethers } from "ethers";
+import { Button, TextField, Alert, Box } from "@mui/material";
 
 const WalletConnect = ({ setWalletAddress }) => {
   const [error, setError] = useState("");
-  const [manualAddress, setManualAddress] = useState(""); // State to hold the manual input address
+  const [manualAddress, setManualAddress] = useState("");
 
   // Connect to Metamask wallet
   const connectWallet = async () => {
@@ -15,9 +15,9 @@ const WalletConnect = ({ setWalletAddress }) => {
         const signer = provider.getSigner();
         const address = await signer.getAddress();
         setWalletAddress(address);
-        setError(""); // Clear any previous errors
+        setError("");
       } catch (err) {
-        console.error("Error details:", err); // Log the error details to see what's going wrong
+        console.error("Error details:", err);
         setError("Could not connect to wallet. Please try again.");
       }
     } else {
@@ -29,7 +29,7 @@ const WalletConnect = ({ setWalletAddress }) => {
   const handleManualAddress = () => {
     if (ethers.utils.isAddress(manualAddress)) {
       setWalletAddress(manualAddress);
-      setError(""); // Clear any previous errors
+      setError("");
     } else {
       setError("Invalid Ethereum address. Please check and try again.");
     }
@@ -48,7 +48,7 @@ const WalletConnect = ({ setWalletAddress }) => {
         padding: 3,
         borderRadius: 2,
         boxShadow: 3,
-        backgroundColor: "#f9f9f9", // Light background for contrast
+        backgroundColor: "#f9f9f9",
       }}
     >
       <Button
@@ -68,7 +68,7 @@ const WalletConnect = ({ setWalletAddress }) => {
         sx={{
           mb: 2,
           "& .MuiOutlinedInput-root": {
-            borderRadius: 2, // Rounded corners for the text field
+            borderRadius: 2,
           },
         }}
       />
